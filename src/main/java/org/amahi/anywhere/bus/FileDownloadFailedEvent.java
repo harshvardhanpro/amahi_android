@@ -19,5 +19,6 @@
 
 package org.amahi.anywhere.bus;
 
-public class FileDownloadFailedEvent implements BusEvent {
+public class FileDownloadFailedEvent implements BusEvent
+{
 }

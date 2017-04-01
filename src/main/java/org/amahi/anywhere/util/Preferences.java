@@ -25,44 +25,47 @@ import android.content.SharedPreferences;
 /**
  * Application {@link android.content.SharedPreferences} accessor.
  */
-public final class Preferences {
-    private final SharedPreferences preferences;
+public final class Preferences
+{
+	private static final class Locations
+	{
+		private Locations() {
+		}
 
-    private Preferences(Context context, String location) {
-        this.preferences = context.getSharedPreferences(location, Context.MODE_PRIVATE);
-    }
+		public static final String COOKIE = "cookie";
+	}
 
-    public static Preferences ofCookie(Context context) {
-        return new Preferences(context, Locations.COOKIE);
-    }
+	private static final class Defaults
+	{
+		private Defaults() {
+		}
 
-    public String getAppCookies(String appHost) {
-        return getString(appHost);
-    }
+		public static final String STRING = "";
+	}
 
-    private String getString(String key) {
-        return preferences.getString(key, Defaults.STRING);
-    }
+	private final SharedPreferences preferences;
 
-    public void setAppCookies(String appHost, String appCookies) {
-        setString(appHost, appCookies);
-    }
+	public static Preferences ofCookie(Context context) {
+		return new Preferences(context, Locations.COOKIE);
+	}
 
-    private void setString(String key, String value) {
-        preferences.edit().putString(key, value).apply();
-    }
+	private Preferences(Context context, String location) {
+		this.preferences = context.getSharedPreferences(location, Context.MODE_PRIVATE);
+	}
 
-    private static final class Locations {
-        public static final String COOKIE = "cookie";
+	public String getAppCookies(String appHost) {
+		return getString(appHost);
+	}
 
-        private Locations() {
-        }
-    }
+	private String getString(String key) {
+		return preferences.getString(key, Defaults.STRING);
+	}
 
-    private static final class Defaults {
-        public static final String STRING = "";
+	public void setAppCookies(String appHost, String appCookies) {
+		setString(appHost, appCookies);
+	}
 
-        private Defaults() {
-        }
-    }
+	private void setString(String key, String value) {
+		preferences.edit().putString(key, value).apply();
+	}
 }

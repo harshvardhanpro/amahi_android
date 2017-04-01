@@ -11,40 +11,43 @@ import java.util.Map;
 /**
  * Application identifiers accessor.
  */
-public class Identifier {
-    private Identifier() {
-    }
+public class Identifier
+{
+	private static final class Format
+	{
+		private Format() {
+		}
 
-    public static String getUserAgent(Context context) {
-        return String.format(Locale.US, Format.USER_AGENT,
-                Android.getApplicationVersion(),
-                Android.getVersion(),
-                Android.getDeviceName(),
-                Android.getDeviceScreenSize(context),
-                Android.getDeviceScreenHeight(context),
-                Android.getDeviceScreenWidth(context));
-    }
+		public static final String USER_AGENT = "AmahiAnywhere/%s (Android %s; %s) Size/%.1f Resolution/%dx%d";
+		public static final String USER_AGENT_FIELD = "%s/%s";
+	}
 
-    public static String getUserAgent(Context context, Map<String, String> fields) {
-        List<String> userAgentFields = new ArrayList<String>();
+	private Identifier() {
+	}
 
-        userAgentFields.add(getUserAgent(context));
+	public static String getUserAgent(Context context) {
+		return String.format(Locale.US, Format.USER_AGENT,
+			Android.getApplicationVersion(),
+			Android.getVersion(),
+			Android.getDeviceName(),
+			Android.getDeviceScreenSize(context),
+			Android.getDeviceScreenHeight(context),
+			Android.getDeviceScreenWidth(context));
+	}
 
-        for (String fieldKey : fields.keySet()) {
-            String fieldValue = fields.get(fieldKey);
+	public static String getUserAgent(Context context, Map<String, String> fields) {
+		List<String> userAgentFields = new ArrayList<String>();
 
-            String userAgentField = String.format(Format.USER_AGENT_FIELD, fieldKey, fieldValue);
+		userAgentFields.add(getUserAgent(context));
 
-            userAgentFields.add(userAgentField);
-        }
+		for (String fieldKey : fields.keySet()) {
+			String fieldValue = fields.get(fieldKey);
 
-        return TextUtils.join(" ", userAgentFields);
-    }
+			String userAgentField = String.format(Format.USER_AGENT_FIELD, fieldKey, fieldValue);
 
-    private static final class Format {
-        public static final String USER_AGENT = "AmahiAnywhere/%s (Android %s; %s) Size/%.1f Resolution/%dx%d";
-        public static final String USER_AGENT_FIELD = "%s/%s";
-        private Format() {
-        }
-    }
+			userAgentFields.add(userAgentField);
+		}
+
+		return TextUtils.join(" ", userAgentFields);
+	}
 }

@@ -19,14 +19,15 @@
 
 package org.amahi.anywhere.bus;
 
-public class NetworkChangedEvent implements BusEvent {
-    private final int network;
+public class NetworkChangedEvent implements BusEvent
+{
+	private final int network;
 
-    public NetworkChangedEvent(int network) {
-        this.network = network;
-    }
+	public NetworkChangedEvent(int network) {
+		this.network = network;
+	}
 
-    public int getNetwork() {
-        return network;
-    }
+	public int getNetwork() {
+		return network;
+	}
 }

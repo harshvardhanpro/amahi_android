@@ -45,149 +45,156 @@ import java.util.List;
 /**
  * Intents factory.
  */
-public final class Intents {
-    private Intents() {
-    }
+public final class Intents
+{
+	private Intents() {
+	}
 
-    public static final class Extras {
-        public static final String SERVER_APP = "server_app";
-        public static final String SERVER_FILE = "server_file";
-        public static final String SERVER_FILES = "server_files";
-        public static final String SERVER_SHARE = "server_share";
-        private Extras() {
-        }
-    }
+	public static final class Extras
+	{
+		private Extras() {
+		}
 
-    public static final class Uris {
-        public static final String EMAIL = "mailto:%s?subject=%s";
-        public static final String GOOGLE_PLAY = "market://details?id=%s";
-        public static final String GOOGLE_PLAY_SEARCH = "market://search?q=%s";
-        private Uris() {
-        }
-    }
+		public static final String SERVER_APP = "server_app";
+		public static final String SERVER_FILE = "server_file";
+		public static final String SERVER_FILES = "server_files";
+		public static final String SERVER_SHARE = "server_share";
+	}
 
-    public static final class Builder {
-        private final Context context;
+	public static final class Uris
+	{
+		private Uris() {
+		}
 
-        private Builder(Context context) {
-            this.context = context;
-        }
+		public static final String EMAIL = "mailto:%s?subject=%s";
 
-        public static Builder with(Context context) {
-            return new Builder(context);
-        }
+		public static final String GOOGLE_PLAY = "market://details?id=%s";
+		public static final String GOOGLE_PLAY_SEARCH = "market://search?q=%s";
+	}
 
-        public Intent buildServerAppAcitivity(ServerApp app) {
-            Intent intent = new Intent(context, ServerAppActivity.class);
-            intent.putExtra(Extras.SERVER_APP, app);
+	public static final class Builder
+	{
+		private final Context context;
 
-            return intent;
-        }
+		public static Builder with(Context context) {
+			return new Builder(context);
+		}
 
-        public Intent buildServerFilesActivity(ServerShare share) {
-            Intent intent = new Intent(context, ServerFilesActivity.class);
-            intent.putExtra(Extras.SERVER_SHARE, share);
+		private Builder(Context context) {
+			this.context = context;
+		}
 
-            return intent;
-        }
+		public Intent buildServerAppAcitivity(ServerApp app) {
+			Intent intent = new Intent(context, ServerAppActivity.class);
+			intent.putExtra(Extras.SERVER_APP, app);
 
-        public boolean isServerFileSupported(ServerFile file) {
-            return getServerFileActivity(file) != null;
-        }
+			return intent;
+		}
 
-        private Class<? extends Activity> getServerFileActivity(ServerFile file) {
-            String fileFormat = file.getMime();
+		public Intent buildServerFilesActivity(ServerShare share) {
+			Intent intent = new Intent(context, ServerFilesActivity.class);
+			intent.putExtra(Extras.SERVER_SHARE, share);
 
-            if (ServerFileAudioActivity.supports(fileFormat)) {
-                return ServerFileAudioActivity.class;
-            }
+			return intent;
+		}
 
-            if (ServerFileImageActivity.supports(fileFormat)) {
-                return ServerFileImageActivity.class;
-            }
+		public boolean isServerFileSupported(ServerFile file) {
+			return getServerFileActivity(file) != null;
+		}
 
-            if (ServerFileVideoActivity.supports(fileFormat)) {
-                return ServerFileVideoActivity.class;
-            }
+		private Class<? extends Activity> getServerFileActivity(ServerFile file) {
+			String fileFormat = file.getMime();
 
-            if (ServerFileWebActivity.supports(fileFormat)) {
-                return ServerFileWebActivity.class;
-            }
+			if (ServerFileAudioActivity.supports(fileFormat)) {
+				return ServerFileAudioActivity.class;
+			}
 
-            return null;
-        }
+			if (ServerFileImageActivity.supports(fileFormat)) {
+				return ServerFileImageActivity.class;
+			}
 
-        public Intent buildServerFileIntent(ServerShare share, List<ServerFile> files, ServerFile file) {
-            Intent intent = new Intent(context, getServerFileActivity(file));
-            intent.putExtra(Extras.SERVER_SHARE, share);
-            intent.putParcelableArrayListExtra(Extras.SERVER_FILES, new ArrayList<Parcelable>(files));
-            intent.putExtra(Extras.SERVER_FILE, file);
+			if (ServerFileVideoActivity.supports(fileFormat)) {
+				return ServerFileVideoActivity.class;
+			}
 
-            return intent;
-        }
+			if (ServerFileWebActivity.supports(fileFormat)) {
+				return ServerFileWebActivity.class;
+			}
 
-        public boolean isServerFileOpeningSupported(ServerFile file) {
-            PackageManager packageManager = context.getPackageManager();
+			return null;
+		}
 
-            List<ResolveInfo> applications = packageManager.queryIntentActivities(
-                    buildServerFileOpeningIntent(file),
-                    PackageManager.MATCH_DEFAULT_ONLY);
+		public Intent buildServerFileIntent(ServerShare share, List<ServerFile> files, ServerFile file) {
+			Intent intent = new Intent(context, getServerFileActivity(file));
+			intent.putExtra(Extras.SERVER_SHARE, share);
+			intent.putParcelableArrayListExtra(Extras.SERVER_FILES, new ArrayList<Parcelable>(files));
+			intent.putExtra(Extras.SERVER_FILE, file);
 
-            return !applications.isEmpty();
-        }
+			return intent;
+		}
 
-        private Intent buildServerFileOpeningIntent(ServerFile file) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setType(file.getMime());
+		public boolean isServerFileOpeningSupported(ServerFile file) {
+			PackageManager packageManager = context.getPackageManager();
 
-            return intent;
-        }
+			List<ResolveInfo> applications = packageManager.queryIntentActivities(
+				buildServerFileOpeningIntent(file),
+				PackageManager.MATCH_DEFAULT_ONLY);
 
-        public Intent buildServerFileOpeningIntent(ServerFile file, Uri fileUri) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(fileUri, file.getMime());
+			return !applications.isEmpty();
+		}
 
-            return Intent.createChooser(intent, null);
-        }
+		private Intent buildServerFileOpeningIntent(ServerFile file) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setType(file.getMime());
 
-        public Intent buildServerFileSharingIntent(ServerFile file, Uri fileUri) {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType(file.getMime());
-            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+			return intent;
+		}
 
-            return Intent.createChooser(intent, null);
-        }
+		public Intent buildServerFileOpeningIntent(ServerFile file, Uri fileUri) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setDataAndType(fileUri, file.getMime());
 
-        public Intent buildSettingsIntent() {
-            return new Intent(context, SettingsActivity.class);
-        }
+			return Intent.createChooser(intent, null);
+		}
 
-        public Intent buildVersionIntent(Context context) {
-            return new Intent(context, WebViewActivity.class);
-        }
+		public Intent buildServerFileSharingIntent(ServerFile file, Uri fileUri) {
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.setType(file.getMime());
+			intent.putExtra(Intent.EXTRA_STREAM, fileUri);
 
-        public Intent buildFeedbackIntent() {
-            String feedbackAddress = "support@amahi.org";
-            String feedbackSubject = "Android Amahi Anywhere";
+			return Intent.createChooser(intent, null);
+		}
 
-            String feedbackUri = String.format(Uris.EMAIL, feedbackAddress, feedbackSubject);
+		public Intent buildSettingsIntent() {
+			return new Intent(context, SettingsActivity.class);
+		}
 
-            return new Intent(Intent.ACTION_SENDTO, Uri.parse(feedbackUri));
-        }
+		public Intent buildVersionIntent(Context context) {
+			return new Intent(context, WebViewActivity.class);
+		}
 
-        public Intent buildGooglePlayIntent() {
-            String googlePlayUri = String.format(Uris.GOOGLE_PLAY, context.getPackageName());
+		public Intent buildFeedbackIntent() {
+			String feedbackAddress = "support@amahi.org";
+			String feedbackSubject = "Android Amahi Anywhere";
 
-            return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
-        }
+			String feedbackUri = String.format(Uris.EMAIL, feedbackAddress, feedbackSubject);
 
-        public Intent buildGooglePlaySearchIntent(String search) {
-            String googlePlaySearchUri = String.format(Uris.GOOGLE_PLAY_SEARCH, search);
+			return new Intent(Intent.ACTION_SENDTO, Uri.parse(feedbackUri));
+		}
 
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(googlePlaySearchUri));
+		public Intent buildGooglePlayIntent() {
+			String googlePlayUri = String.format(Uris.GOOGLE_PLAY, context.getPackageName());
 
-            return intent;
-        }
-    }
+			return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
+		}
+
+		public Intent buildGooglePlaySearchIntent(String search) {
+			String googlePlaySearchUri = String.format(Uris.GOOGLE_PLAY_SEARCH, search);
+
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(googlePlaySearchUri));
+
+			return intent;
+		}
+	}
 }

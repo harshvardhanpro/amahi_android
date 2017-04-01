@@ -23,14 +23,15 @@ import org.amahi.anywhere.server.model.ServerApp;
 
 import java.util.List;
 
-public class ServerAppsLoadedEvent implements BusEvent {
-    private final List<ServerApp> serverApps;
+public class ServerAppsLoadedEvent implements BusEvent
+{
+	private final List<ServerApp> serverApps;
 
-    public ServerAppsLoadedEvent(List<ServerApp> serverApps) {
-        this.serverApps = serverApps;
-    }
+	public ServerAppsLoadedEvent(List<ServerApp> serverApps) {
+		this.serverApps = serverApps;
+	}
 
-    public List<ServerApp> getServerApps() {
-        return serverApps;
-    }
+	public List<ServerApp> getServerApps() {
+		return serverApps;
+	}
 }

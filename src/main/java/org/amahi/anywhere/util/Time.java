@@ -24,18 +24,20 @@ import java.util.Date;
 /**
  * Time formats accessor.
  */
-public class Time {
-    private Time() {
-    }
+public class Time
+{
+	public static final class Format
+	{
+		private Format() {
+		}
 
-    public static String getEpochTimeString(Date date) {
-        return String.valueOf(date.getTime());
-    }
+		public static final String RFC_1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
+	}
 
-    public static final class Format {
-        public static final String RFC_1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
+	private Time() {
+	}
 
-        private Format() {
-        }
-    }
+	public static String getEpochTimeString(Date date) {
+		return String.valueOf(date.getTime());
+	}
 }

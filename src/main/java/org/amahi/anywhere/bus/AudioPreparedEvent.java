@@ -19,5 +19,6 @@
 
 package org.amahi.anywhere.bus;
 
-public class AudioPreparedEvent implements BusEvent {
+public class AudioPreparedEvent implements BusEvent
+{
 }

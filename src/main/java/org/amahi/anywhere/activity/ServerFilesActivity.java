@@ -242,7 +242,7 @@ public class ServerFilesActivity extends AppCompatActivity
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 			case android.R.id.home:
-				onBackPressed();
+				finish();
 				return true;
 
 			default:

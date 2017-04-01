@@ -21,14 +21,15 @@ package org.amahi.anywhere.bus;
 
 import org.amahi.anywhere.server.model.Authentication;
 
-public class AuthenticationSucceedEvent implements BusEvent {
-    private final Authentication authentication;
+public class AuthenticationSucceedEvent implements BusEvent
+{
+	private final Authentication authentication;
 
-    public AuthenticationSucceedEvent(Authentication authentication) {
-        this.authentication = authentication;
-    }
+	public AuthenticationSucceedEvent(Authentication authentication) {
+		this.authentication = authentication;
+	}
 
-    public Authentication getAuthentication() {
-        return authentication;
-    }
+	public Authentication getAuthentication() {
+		return authentication;
+	}
 }
